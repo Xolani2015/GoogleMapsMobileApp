@@ -1,8 +1,11 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:async';
-
+import 'dart:convert';
+import 'package:Quickloc8app_attack_mobile_app/app/functions/read_vehicle_json.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapPage extends StatefulWidget {
@@ -13,9 +16,45 @@ class MapPage extends StatefulWidget {
 }
 
 class MapPageState extends State<MapPage> {
+  late Position userPosition;
+
+//   Future<void> readVehiclePositionJson() async {
+//     final String response =
+//         await rootBundle.loadString('assets/vehicleCordinates.json');
+//     final data = await json.decode(response);
+// // ...
+//   }
+
+  List<Marker> vehicleMarkers() {
+    List<Marker> markers = [
+      Marker(
+          markerId: MarkerId('car'),
+          infoWindow: InfoWindow(
+            title: 'car icon',
+          ),
+          icon: BitmapDescriptor.defaultMarker,
+          position: LatLng(37.42796133580664, -122.085749655962))
+    ];
+    // readVehiclePositionJson();
+    readVehiclePositionJson();
+    return markers;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // determinePosition();
+  }
+
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
-
+  static final Marker _carMarker = Marker(
+      markerId: MarkerId('car'),
+      infoWindow: InfoWindow(
+        title: 'car icon',
+      ),
+      icon: BitmapDescriptor.defaultMarker,
+      position: LatLng(37.42796133580664, -122.085749655962));
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
@@ -36,6 +75,7 @@ class MapPageState extends State<MapPage> {
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
         },
+        markers: {_carMarker, vehicleMarkers().first},
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _goToTheLake,

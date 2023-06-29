@@ -37,6 +37,7 @@ dependencies:
   flutter_native_splash: ^2.2.10+1
   intl_phone_field: ^3.1.0
   google_maps_flutter: ^2.3.1
+  geolocator: ^9.0.2
 
 dev_dependencies:
   flutter_test:
@@ -57,6 +58,7 @@ flutter:
   assets:
      - assets/images/logo/
      - assets/images/general/
+     - assets/app_data/
 
 
   # The following line ensures that the Material Icons font is

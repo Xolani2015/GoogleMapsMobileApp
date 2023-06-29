@@ -16,6 +16,11 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
+@override
+initState() {
+  print("initState Called");
+}
+
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -211,7 +216,6 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(
                 height: mediaQueryHeight * 0.07,
               ),
-
               SizedBox(
                 height: mediaQueryHeight * 0.03,
               ),
