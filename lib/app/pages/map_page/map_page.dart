@@ -77,7 +77,6 @@ class MapPageState extends State<MapPage> {
           } else {
             return GoogleMap(
               zoomControlsEnabled: false,
-              zoomGesturesEnabled: false,
               mapType: MapType.normal,
               initialCameraPosition: _cptPosition,
               onMapCreated: (GoogleMapController controller) {
@@ -89,21 +88,73 @@ class MapPageState extends State<MapPage> {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: const Color.fromARGB(255, 221, 60, 48),
-        onPressed: () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const MessagePage(),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton.extended(
+            backgroundColor: const Color.fromARGB(255, 221, 60, 48),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MessagePage(),
+                ),
+              );
+            },
+            label: const Text(
+              'Messages',
+              style: TextStyle(color: Colors.white),
             ),
-          );
-        },
-        label: const Text(
-          'Messages',
-          style: TextStyle(color: Colors.white),
-        ),
-        icon: const Icon(Icons.directions_boat, color: Colors.white),
+            icon: const Icon(Icons.message, color: Colors.white),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Row(
+            children: [
+              FloatingActionButton.extended(
+                backgroundColor: const Color.fromARGB(255, 221, 60, 48),
+                onPressed: () async {
+                  CameraPosition _queenstown = CameraPosition(
+                      bearing: 192.8334901395799,
+                      target: LatLng(-33.948581, 18.618294),
+                      zoom: 9.387);
+                  final GoogleMapController controller =
+                      await _controller.future;
+                  await controller.animateCamera(
+                      CameraUpdate.newCameraPosition(_queenstown));
+                },
+                label: const Text(
+                  '',
+                  style: TextStyle(color: Colors.white),
+                ),
+                icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              FloatingActionButton.extended(
+                backgroundColor: const Color.fromARGB(255, 221, 60, 48),
+                onPressed: () async {
+                  CameraPosition _queenstown = CameraPosition(
+                      bearing: 192.8334901395799,
+                      target: LatLng(-31.896264, 26.871527),
+                      zoom: 14.151926040649414);
+                  final GoogleMapController controller =
+                      await _controller.future;
+                  await controller.animateCamera(
+                      CameraUpdate.newCameraPosition(_queenstown));
+                },
+                label: const Text(
+                  '',
+                  style: TextStyle(color: Colors.white),
+                ),
+                icon: const Icon(Icons.arrow_forward_ios_outlined,
+                    color: Colors.white),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

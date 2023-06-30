@@ -51,11 +51,13 @@ class _MessagePageState extends State<MessagePage> {
                           child: Container(
                               height: 40,
                               decoration: BoxDecoration(
-                                  color: Colors.white, shape: BoxShape.circle),
+                                  color: Colors.red, shape: BoxShape.circle),
                               child: const Center(
                                   child: Text(
                                 'E',
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
                               )))),
                       Expanded(
                           flex: 6,
