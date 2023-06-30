@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:Quickloc8app_attack_mobile_app/app/models/vehicle_position_model.dart';
+import 'package:Quickloc8app_attack_mobile_app/app/pages/messages_page/messages_page.dart';
 import 'package:Quickloc8app_attack_mobile_app/app/server/app_local_server.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,18 +23,22 @@ class MapPageState extends State<MapPage> {
   List<VehiclePositionModel> vehiclePositionList2 = [];
 
   Future<Set<Marker>> vehicleMarkers() async {
+    _loadDarkMapTheme();
     vehiclePositionList2 = await readVehiclePositionJSON();
     Set<Marker> markers = {};
-
+    final icon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(size: Size(8, 8)),
+        'assets/images/general/ic_new_white_taxi_re.png');
     for (var vehiclePosition in vehiclePositionList2) {
       markers.add(Marker(
           markerId: MarkerId('car'),
           infoWindow: InfoWindow(
             title: 'car icon',
           ),
-          icon: BitmapDescriptor.defaultMarker,
+          icon: icon,
           position: LatLng(
-              vehiclePosition.latitude ?? 0, vehiclePosition.longitude ?? 0)));
+              vehiclePosition.latitude ?? 0, vehiclePosition.longitude ?? 0),
+          rotation: double.parse(vehiclePosition.heading.toString())));
     }
 
     return markers;
@@ -46,36 +51,20 @@ class MapPageState extends State<MapPage> {
     List<VehiclePositionModel> vehiclePositionList = decodedJson
         .map((e) => VehiclePositionModel.fromJson(e as Map<String, dynamic>))
         .toList();
-    return vehiclePositionList;
-  }
 
-  @override
-  void initState() {
-    super.initState();
+    return vehiclePositionList;
   }
 
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
-  static final Marker _carMarker = Marker(
-      markerId: MarkerId('car'),
-      infoWindow: InfoWindow(
-        title: 'car icon',
-      ),
-      icon: BitmapDescriptor.defaultMarker,
-      position: LatLng(37.42796133580664, -122.085749655962));
-  static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
+//-33.983889, 18.482338
+  static const CameraPosition _cptPosition = CameraPosition(
+    target: LatLng(-33.948581, 18.618294),
+    zoom: 9.387,
   );
-
-  static const CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
-
   @override
   Widget build(BuildContext context) {
+    _loadDarkMapTheme();
     return Scaffold(
       body: FutureBuilder(
         future: vehicleMarkers(),
@@ -87,9 +76,12 @@ class MapPageState extends State<MapPage> {
             return Text(snapshot.error.toString());
           } else {
             return GoogleMap(
+              zoomControlsEnabled: false,
+              zoomGesturesEnabled: false,
               mapType: MapType.normal,
-              initialCameraPosition: _kGooglePlex,
+              initialCameraPosition: _cptPosition,
               onMapCreated: (GoogleMapController controller) {
+                _loadDarkMapTheme();
                 _controller.complete(controller);
               },
               markers: snapshot.data!.toSet(),
@@ -98,15 +90,28 @@ class MapPageState extends State<MapPage> {
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
-        label: const Text('To the lake!'),
-        icon: const Icon(Icons.directions_boat),
+        backgroundColor: const Color.fromARGB(255, 221, 60, 48),
+        onPressed: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MessagePage(),
+            ),
+          );
+        },
+        label: const Text(
+          'Messages',
+          style: TextStyle(color: Colors.white),
+        ),
+        icon: const Icon(Icons.directions_boat, color: Colors.white),
       ),
     );
   }
 
-  Future<void> _goToTheLake() async {
+  Future<void> _loadDarkMapTheme() async {
     final GoogleMapController controller = await _controller.future;
-    await controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+    var darkMapStyle =
+        await rootBundle.loadString('assets/images/logo/red_theme.json');
+    controller.setMapStyle(darkMapStyle);
   }
 }
