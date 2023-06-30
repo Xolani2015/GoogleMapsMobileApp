@@ -2,7 +2,8 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'package:Quickloc8app_attack_mobile_app/app/functions/read_vehicle_json.dart';
+import 'package:Quickloc8app_attack_mobile_app/app/models/vehicle_position_model.dart';
+import 'package:Quickloc8app_attack_mobile_app/app/server/app_local_server.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -16,34 +17,41 @@ class MapPage extends StatefulWidget {
 }
 
 class MapPageState extends State<MapPage> {
+  AppLocalServer localServer = AppLocalServer();
   late Position userPosition;
+  List<VehiclePositionModel> vehiclePositionList2 = [];
 
-//   Future<void> readVehiclePositionJson() async {
-//     final String response =
-//         await rootBundle.loadString('assets/vehicleCordinates.json');
-//     final data = await json.decode(response);
-// // ...
-//   }
+  Future<Set<Marker>> vehicleMarkers() async {
+    vehiclePositionList2 = await readVehiclePositionJSON();
+    Set<Marker> markers = {};
 
-  List<Marker> vehicleMarkers() {
-    List<Marker> markers = [
-      Marker(
+    for (var vehiclePosition in vehiclePositionList2) {
+      markers.add(Marker(
           markerId: MarkerId('car'),
           infoWindow: InfoWindow(
             title: 'car icon',
           ),
           icon: BitmapDescriptor.defaultMarker,
-          position: LatLng(37.42796133580664, -122.085749655962))
-    ];
-    // readVehiclePositionJson();
-    readVehiclePositionJson();
+          position: LatLng(
+              vehiclePosition.latitude ?? 0, vehiclePosition.longitude ?? 0)));
+    }
+
     return markers;
+  }
+
+  Future<List<VehiclePositionModel>> readVehiclePositionJSON() async {
+    final String response =
+        await rootBundle.loadString('assets/app_data/vehicleCordinates.json');
+    List<dynamic> decodedJson = await json.decode(response) as List<dynamic>;
+    List<VehiclePositionModel> vehiclePositionList = decodedJson
+        .map((e) => VehiclePositionModel.fromJson(e as Map<String, dynamic>))
+        .toList();
+    return vehiclePositionList;
   }
 
   @override
   void initState() {
     super.initState();
-    // determinePosition();
   }
 
   final Completer<GoogleMapController> _controller =
@@ -69,13 +77,25 @@ class MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GoogleMap(
-        mapType: MapType.normal,
-        initialCameraPosition: _kGooglePlex,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
+      body: FutureBuilder(
+        future: vehicleMarkers(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          }
+          if (snapshot.hasError) {
+            return Text(snapshot.error.toString());
+          } else {
+            return GoogleMap(
+              mapType: MapType.normal,
+              initialCameraPosition: _kGooglePlex,
+              onMapCreated: (GoogleMapController controller) {
+                _controller.complete(controller);
+              },
+              markers: snapshot.data!.toSet(),
+            );
+          }
         },
-        markers: {_carMarker, vehicleMarkers().first},
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _goToTheLake,
