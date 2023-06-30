@@ -92,7 +92,7 @@ class MapPageState extends State<MapPage> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton.extended(
-            backgroundColor: const Color.fromARGB(255, 221, 60, 48),
+            backgroundColor: Colors.white,
             onPressed: () {
               Navigator.pushReplacement(
                 context,
@@ -103,9 +103,9 @@ class MapPageState extends State<MapPage> {
             },
             label: const Text(
               'Messages',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.red),
             ),
-            icon: const Icon(Icons.message, color: Colors.white),
+            icon: const Icon(Icons.message, color: Colors.red),
           ),
           SizedBox(
             width: 10,
@@ -113,7 +113,7 @@ class MapPageState extends State<MapPage> {
           Row(
             children: [
               FloatingActionButton.extended(
-                backgroundColor: const Color.fromARGB(255, 221, 60, 48),
+                backgroundColor: Colors.white,
                 onPressed: () async {
                   CameraPosition _queenstown = CameraPosition(
                       bearing: 192.8334901395799,
@@ -128,13 +128,13 @@ class MapPageState extends State<MapPage> {
                   '',
                   style: TextStyle(color: Colors.white),
                 ),
-                icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
+                icon: const Icon(Icons.arrow_back_ios_new, color: Colors.red),
               ),
               SizedBox(
                 width: 10,
               ),
               FloatingActionButton.extended(
-                backgroundColor: const Color.fromARGB(255, 221, 60, 48),
+                backgroundColor: Colors.white,
                 onPressed: () async {
                   CameraPosition _queenstown = CameraPosition(
                       bearing: 192.8334901395799,
@@ -150,7 +150,7 @@ class MapPageState extends State<MapPage> {
                   style: TextStyle(color: Colors.white),
                 ),
                 icon: const Icon(Icons.arrow_forward_ios_outlined,
-                    color: Colors.white),
+                    color: Colors.red),
               ),
             ],
           ),
