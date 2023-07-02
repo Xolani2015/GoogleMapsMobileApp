@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:Quickloc8app_attack_mobile_app/app/models/message_model.dart';
 import 'package:Quickloc8app_attack_mobile_app/app/pages/map_page/map_page.dart';
@@ -36,8 +37,10 @@ class _MessagePageState extends State<MessagePage> {
   Future<List<Widget>> returnMessageItems() async {
     _messagelist = await readMessageJSON();
     List<Widget> messageList = [];
-
+    int startNum = 0;
     for (var message in _messagelist) {
+      Random random = new Random();
+      startNum = random.nextInt(2);
       messageList.add(Row(
         children: [
           Expanded(
@@ -106,7 +109,7 @@ class _MessagePageState extends State<MessagePage> {
                           Icon(
                             Icons.star,
                             size: 32,
-                            color: Colors.amber,
+                            color: startNum == 1 ? Colors.amber : Colors.grey,
                           )
                         ],
                       )),

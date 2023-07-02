@@ -23,6 +23,7 @@ class MapPageState extends State<MapPage> {
   late Position userPosition;
   List<VehiclePositionModel> vehiclePositionList2 = [];
   List<TowerModel> towerPositonList2 = [];
+  int mapFocusNum = 0;
 
   Future<Set<Marker>> returnMapMarkers() async {
     _loadDarkMapTheme();
@@ -86,8 +87,8 @@ class MapPageState extends State<MapPage> {
       Completer<GoogleMapController>();
 //-33.983889, 18.482338
   static const CameraPosition _cptPosition = CameraPosition(
-    target: LatLng(-33.948581, 18.618294),
-    zoom: 9.387,
+    target: LatLng(-8.368168, 24.829703),
+    zoom: 3.887,
   );
   @override
   Widget build(BuildContext context) {
@@ -106,8 +107,11 @@ class MapPageState extends State<MapPage> {
               zoomControlsEnabled: false,
               mapType: MapType.normal,
               initialCameraPosition: _cptPosition,
-              onMapCreated: (GoogleMapController controller) {
+              onMapCreated: (GoogleMapController controller) async {
                 _loadDarkMapTheme();
+                var darkMapStyle = await rootBundle
+                    .loadString('assets/images/logo/red_theme.json');
+                controller.setMapStyle(darkMapStyle);
                 _controller.complete(controller);
               },
               markers: snapshot.data!.toSet(),
