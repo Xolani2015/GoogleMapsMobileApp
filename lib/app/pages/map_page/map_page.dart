@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'package:Quickloc8app_attack_mobile_app/app/models/tower_model.dart';
 import 'package:Quickloc8app_attack_mobile_app/app/models/vehicle_position_model.dart';
 import 'package:Quickloc8app_attack_mobile_app/app/pages/messages_page/messages_page.dart';
 import 'package:Quickloc8app_attack_mobile_app/app/server/app_local_server.dart';
@@ -21,12 +22,14 @@ class MapPageState extends State<MapPage> {
   AppLocalServer localServer = AppLocalServer();
   late Position userPosition;
   List<VehiclePositionModel> vehiclePositionList2 = [];
+  List<TowerModel> towerPositonList2 = [];
 
-  Future<Set<Marker>> vehicleMarkers() async {
+  Future<Set<Marker>> returnMapMarkers() async {
     _loadDarkMapTheme();
     vehiclePositionList2 = await readVehiclePositionJSON();
+    towerPositonList2 = await readTowerJSON();
     Set<Marker> markers = {};
-    final icon = await BitmapDescriptor.fromAssetImage(
+    final vehicleIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(size: Size(8, 8)),
         'assets/images/general/ic_new_white_taxi_re.png');
     for (var vehiclePosition in vehiclePositionList2) {
@@ -35,10 +38,24 @@ class MapPageState extends State<MapPage> {
           infoWindow: InfoWindow(
             title: 'car icon',
           ),
-          icon: icon,
+          icon: vehicleIcon,
           position: LatLng(
               vehiclePosition.latitude ?? 0, vehiclePosition.longitude ?? 0),
           rotation: double.parse(vehiclePosition.heading.toString())));
+    }
+
+    final towerIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(size: Size(8, 8)),
+        'assets/images/general/smalltower.png');
+    for (var tower in towerPositonList2) {
+      markers.add(Marker(
+        markerId: MarkerId('tower'),
+        infoWindow: InfoWindow(
+          title: 'towers icon',
+        ),
+        icon: towerIcon,
+        position: LatLng(tower.latitude ?? 0, tower.longitude ?? 0),
+      ));
     }
 
     return markers;
@@ -55,6 +72,16 @@ class MapPageState extends State<MapPage> {
     return vehiclePositionList;
   }
 
+  Future<List<TowerModel>> readTowerJSON() async {
+    final String response =
+        await rootBundle.loadString('assets/app_data/towers.json');
+    List<dynamic> decodedJson = await json.decode(response) as List<dynamic>;
+    List<TowerModel> towerList = decodedJson
+        .map((e) => TowerModel.fromJson(e as Map<String, dynamic>))
+        .toList();
+    return towerList;
+  }
+
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
 //-33.983889, 18.482338
@@ -67,7 +94,7 @@ class MapPageState extends State<MapPage> {
     _loadDarkMapTheme();
     return Scaffold(
       body: FutureBuilder(
-        future: vehicleMarkers(),
+        future: returnMapMarkers(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();

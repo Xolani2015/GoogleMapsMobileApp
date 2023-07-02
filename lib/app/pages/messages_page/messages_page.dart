@@ -51,7 +51,7 @@ class _MessagePageState extends State<MessagePage> {
                           child: Container(
                               height: 40,
                               decoration: BoxDecoration(
-                                  color: Colors.red, shape: BoxShape.circle),
+                                  color: Colors.grey, shape: BoxShape.circle),
                               child: const Center(
                                   child: Text(
                                 'E',
@@ -141,7 +141,7 @@ class _MessagePageState extends State<MessagePage> {
             color: Colors.white,
           ),
         ),
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.grey,
       ),
       body: Row(
         children: [
