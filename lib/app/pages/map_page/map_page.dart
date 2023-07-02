@@ -103,9 +103,9 @@ class MapPageState extends State<MapPage> {
             },
             label: const Text(
               'Messages',
-              style: TextStyle(color: Colors.red),
+              style: TextStyle(color: Colors.black),
             ),
-            icon: const Icon(Icons.message, color: Colors.red),
+            icon: const Icon(Icons.message, color: Colors.black),
           ),
           SizedBox(
             width: 10,
@@ -128,7 +128,7 @@ class MapPageState extends State<MapPage> {
                   '',
                   style: TextStyle(color: Colors.white),
                 ),
-                icon: const Icon(Icons.arrow_back_ios_new, color: Colors.red),
+                icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black),
               ),
               SizedBox(
                 width: 10,
@@ -150,7 +150,7 @@ class MapPageState extends State<MapPage> {
                   style: TextStyle(color: Colors.white),
                 ),
                 icon: const Icon(Icons.arrow_forward_ios_outlined,
-                    color: Colors.red),
+                    color: Colors.black),
               ),
             ],
           ),

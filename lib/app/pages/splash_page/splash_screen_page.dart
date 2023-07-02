@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:Quickloc8app_attack_mobile_app/app/pages/map_page/map_page.dart';
+import 'package:Quickloc8app_attack_mobile_app/app/widgets/app_text.dart';
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:Quickloc8app_attack_mobile_app/configurations/configurations.dart';
 import 'package:Quickloc8app_attack_mobile_app/configurations/constants/app_image_assets.dart';
@@ -34,92 +36,59 @@ class _SplashState extends State<Splash> {
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        height: mediaQuery * 0.15,
-                        // decoration: BoxDecoration(
-                        //     color: Configuration().colors.primaryColor,
-                        //     borderRadius: const BorderRadius.only(
-                        //       bottomRight: Radius.circular(160),
-                        //     )
-                        //     ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Container(
-                        height: mediaQuery * 0.15,
-                        color: Configuration().colors.primaryWhite,
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-          _logoWidget(mediaQuery),
-          Row(
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        height: mediaQuery * 0.2,
-                        color: Configuration().colors.primaryWhite,
-                      ),
-                    ),
-                    Expanded(
-                      flex: 3,
-                      child: Container(
-                        height: mediaQuery * 0.2,
-                        decoration: BoxDecoration(
-                            color: Configuration().colors.primaryWhite,
-                            // borderRadius: const BorderRadius.only(
-                            //   topLeft: Radius.circular(120),
-                            // )
-                            ),
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          )
-        ],
+      body: Container(
+        color: Colors.black,
+        child: Column(
+          children: [
+            _logoWidget(mediaQuery),
+          ],
+        ),
       ),
     );
   }
 
-  Row _logoWidget(double mediaQuery) {
-    return Row(
+  Widget _logoWidget(double mediaQuery) {
+    return Column(
       children: [
-        Expanded(child: Container()),
-        Expanded(
-          flex: 3,
-          child: SizedBox(
-            height: mediaQuery * 0.65,
-         
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: mediaQuery * 0.05,
-                ),
-        
-                Center(child: Image.asset(ImageAsset.appLogo)),
-              ],
-            ),
-          ),
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.3,
         ),
-          Expanded(child: Container()),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: 350,
+              child: AvatarGlow(
+                glowColor: Colors.white,
+                endRadius: 100.0,
+                duration: Duration(milliseconds: 1000),
+                repeat: true,
+                showTwoGlows: true,
+                repeatPauseDuration: Duration(milliseconds: 100),
+                child: Material(
+                  // Replace this child with your own
+                  elevation: 8.0,
+                  shape: CircleBorder(),
+                  child: CircleAvatar(
+                    backgroundColor: Color.fromARGB(255, 221, 221, 221),
+                    child: Image.asset(
+                      ImageAsset.appLogo,
+                      height: 100,
+                    ),
+                    radius: 55.0,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        AppText(
+          text: 'Loading...',
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+          fontSize: 25,
+        )
       ],
     );
   }
