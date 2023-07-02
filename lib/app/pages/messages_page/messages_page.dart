@@ -73,7 +73,7 @@ class _MessagePageState extends State<MessagePage> {
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16,
-                                        color: Colors.red),
+                                        color: Colors.white),
                                   ),
                                 ],
                               ),
